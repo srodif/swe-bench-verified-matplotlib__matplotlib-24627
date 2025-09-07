@@ -214,6 +214,49 @@ def test_remove():
     assert ax.stale
 
 
+def test_cla_clf_unset_artist_attributes():
+    """Test that cla() and clf() unset .axes and .figure attributes like remove() does."""
+    # Test cla() behavior
+    fig, ax = plt.subplots()
+    line, = ax.plot([1, 2])
+    rect = mpatches.Rectangle((0, 0), 1, 1)
+    ax.add_patch(rect)
+    text = ax.text(0.5, 0.5, "Hello")
+    
+    # Verify artists are properly associated before cla()
+    assert line.axes is ax
+    assert rect.axes is ax  
+    assert text.axes is ax
+    
+    # Clear the axes
+    ax.cla()
+    
+    # Verify artist attributes are unset after cla()
+    assert line.axes is None, "cla() should unset .axes attribute"
+    assert rect.axes is None, "cla() should unset .axes attribute" 
+    assert text.axes is None, "cla() should unset .axes attribute"
+    
+    # Test clf() behavior  
+    fig, ax = plt.subplots()
+    line, = ax.plot([1, 2])
+    
+    # Add some figure-level artists
+    fig_text = fig.text(0.5, 0.5, "Figure text")
+    
+    # Verify artists are properly associated before clf()
+    assert line.axes is ax
+    assert line.figure is fig
+    assert fig_text.figure is fig
+    
+    # Clear the figure
+    fig.clf()
+    
+    # Verify artist attributes are unset after clf()
+    assert line.axes is None, "clf() should unset .axes attribute"
+    assert line.figure is None, "clf() should unset .figure attribute"
+    assert fig_text.figure is None, "clf() should unset .figure attribute"
+
+
 @image_comparison(["default_edges.png"], remove_text=True, style='default')
 def test_default_edges():
     # Remove this line when this test image is regenerated.

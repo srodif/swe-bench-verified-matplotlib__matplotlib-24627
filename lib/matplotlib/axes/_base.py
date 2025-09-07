@@ -1308,6 +1308,9 @@ class _AxesBase(martist.Artist):
         self._get_patches_for_fill = _process_plot_var_args(self, 'fill')
 
         self._gridOn = mpl.rcParams['axes.grid']
+        # Remove all child artists properly to unset their .axes attributes
+        for child in list(self._children):
+            child.remove()
         self._children = []
         self._mouseover_set = _OrderedSet()
         self.child_axes = []
