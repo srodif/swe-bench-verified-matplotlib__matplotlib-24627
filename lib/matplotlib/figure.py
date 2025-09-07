@@ -949,6 +949,20 @@ default: %(va)s
             ax.clear()
             self.delaxes(ax)  # Remove ax from self._axstack.
 
+        # Remove all figure-level artists properly to unset their .figure attributes
+        for artist in list(self.artists):
+            artist.remove()
+        for line in list(self.lines):
+            line.remove()
+        for patch in list(self.patches):
+            patch.remove()
+        for text in list(self.texts):
+            text.remove()
+        for image in list(self.images):
+            image.remove()
+        for legend in list(self.legends):
+            legend.remove()
+            
         self.artists = []
         self.lines = []
         self.patches = []
